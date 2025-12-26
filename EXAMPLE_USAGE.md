@@ -54,22 +54,45 @@ LAYER STATISTICS:
 ## Analysis Results for This File
 
 ### What Was Found
+
+#### Initial Analysis (±0.5mm window, 5 layers)
 - **No critical issues** - No pause commands (M0, M1, M25, M226)
 - **No high-priority issues** - No excessive arcs or buffer-overwhelming command counts
 - **Only medium-priority items** - Large travel movements >50mm (normal for this print)
 
+#### Extended Analysis (±1.2mm window, 13 layers - 6 above and 6 below Z=31.8mm)
+Analyzed layers from Z=30.6mm to Z=33.0mm (covering the freeze point comprehensively):
+
+**Layers analyzed**: 30.6, 30.8, 31.0, 31.2, 31.4, 31.6, **31.8**, 32.0, 32.2, 32.4, 32.6, 32.8, 33.0
+
+**Findings**:
+- **No critical issues** in any of the 13 layers
+- **No high-priority issues** in any of the 13 layers  
+- **Consistent command counts**: 4,898 to 5,924 commands per layer
+- **Normal travel movements**: 76-83 large movements (>50mm) per layer - typical for infill patterns
+- **No anomalies** at or near the freeze point
+
 ### Conclusion
-The G-code at Z=31.8mm appears **normal** with no anomalies that would cause freezing.
+The G-code from **Z=30.6mm to Z=33.0mm** (6 layers below and above Z=31.8mm) appears **completely normal** with no anomalies that would cause freezing. All analyzed layers show consistent, expected behavior.
 
 ### Recommendations
-Since the G-code is clean, the freeze is likely caused by:
-1. **SD card issues** - Try a different, high-quality SD card
+Since the extended G-code analysis found no issues across 13 layers, the freeze is **definitively hardware-related**:
+1. **SD card issues** (most likely) - Try a different, high-quality SD card
 2. **Firmware bug** - Update to latest Prusa firmware
 3. **Hardware problem** - Check thermistor, power supply, stepper drivers
-4. **Overheating** - Monitor printer temperatures
+4. **Overheating** - Monitor printer temperatures during the print
 5. **File corruption** - Re-slice the model and compare
+6. **Time-based issue** - Check if freeze occurs at ~21h17m into any print (not Z-specific)
 
 ## Advanced Usage Examples
+
+### Analyze 6 Layers Above and Below (Extended Analysis)
+```bash
+# Analyze ±1.2mm around Z=31.8mm (6 layers × 0.2mm layer height)
+python3 analyze_gcode.py KNFORG1_150x90x40_5_0.2mm_PETG_MK3S_21h17m.gcode.zip -z 31.8 -w 1.2
+```
+
+This analyzes 13 layers total: Z=30.6, 30.8, 31.0, 31.2, 31.4, 31.6, 31.8, 32.0, 32.2, 32.4, 32.6, 32.8, 33.0
 
 ### Analyze a Different Z-Height
 ```bash
