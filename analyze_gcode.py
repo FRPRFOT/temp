@@ -452,6 +452,20 @@ class GCodeAnalyzer:
                         elif anom['type'] == 'COMMAND_COUNT_SPIKE':
                             f.write(f"- Command count spike at Z={anom['z']:.3f}mm\n")
                             f.write(f"  Check for complex geometry or slicer artifacts.\n")
+                
+                # If no critical or high issues found
+                if not critical and not high:
+                    f.write("No critical or high-priority issues found at Z={:.1f}mm.\n\n".format(analysis['target_z']))
+                    f.write("The detected medium-priority items (large travel movements) are normal\n")
+                    f.write("for this print and should not cause freezing.\n\n")
+                    f.write("Since no G-code anomalies were found, consider:\n")
+                    f.write("- Checking printer firmware logs for errors\n")
+                    f.write("- Verifying SD card integrity (try a different card)\n")
+                    f.write("- Testing with a different G-code file at the same height\n")
+                    f.write("- Updating printer firmware to the latest version\n")
+                    f.write("- Checking for hardware issues (thermistor, power supply, stepper drivers)\n")
+                    f.write("- Monitoring printer temperature - overheating can cause freezes\n")
+                    f.write("- Checking if the issue occurs at the exact same Z-height consistently\n")
             else:
                 f.write("No obvious issues found. Consider:\n")
                 f.write("- Checking printer firmware logs\n")
